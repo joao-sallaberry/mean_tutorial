@@ -2,19 +2,24 @@ var app = angular.module('meanApp', ['ui.router']);
 
 // Setting routes
 app.config([
-'$stateProvider',
-'$urlRouterProvider',
-function($stateProvider, $urlRouterProvider) {
+	'$stateProvider',
+	'$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider) {
 
-  $stateProvider
-    .state('home', {
-      url: '/home',
-      templateUrl: '/home.html',
-      controller: 'MainCtrl'
-    });
+		$stateProvider
+		.state('home', {
+			url: '/home',
+			templateUrl: '/home.html',
+			controller: 'MainCtrl'
+		})
+		.state('posts', {
+			url: '/posts/{id}',
+			templateUrl: '/posts.html',
+			controller: 'PostsCtrl'
+		});
 
-  $urlRouterProvider.otherwise('home');
-}]);
+		$urlRouterProvider.otherwise('home');
+	}]);
 
 // Create posts service
 app.factory('posts', [function(){
@@ -31,22 +36,17 @@ app.controller('MainCtrl', ['$scope', 'posts',
 		// Bind posts to service
 		$scope.posts = posts.posts;
 
-		// Post list
-		$scope.posts = [
-		{title: 'post 1', upvotes: 5},
-		{title: 'post 2', upvotes: 2},
-		{title: 'post 3', upvotes: 15},
-		{title: 'post 4', upvotes: 9},
-		{title: 'post 5', upvotes: 4}
-		];
-
 		// Add post
 		$scope.addPost = function(){
 			if(!$scope.title || $scope.title === '') { return; }
 			$scope.posts.push({
 				title: $scope.title,
 				link: $scope.link,
-				upvotes: 0
+				upvotes: 1,
+				comments: [
+				{author: 'Joe', body: 'Cool post!', upvotes: 0},
+				{author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0}
+				]
 			});
 			$scope.title = '';
 			$scope.link = '';
@@ -56,5 +56,15 @@ app.controller('MainCtrl', ['$scope', 'posts',
 		$scope.incrementUpvotes = function(post) {
 			post.upvotes += 1;
 		};
+
+	}]);
+
+app.controller('PostsCtrl', [
+	'$scope',
+	'$stateParams',
+	'posts',
+	function($scope, $stateParams, posts){
+
+		$scope.post = posts.posts[$stateParams.id];
 
 	}]);
