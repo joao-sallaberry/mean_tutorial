@@ -1,10 +1,19 @@
 var app = angular.module('meanApp', []);
 
-app.controller('MainCtrl', ['$scope', 
-	function($scope) {
-		$scope.test = 'lal'
+app.factory('posts', [function(){
+	var o = {
+		posts: []
+	};
+	return o;
+}]);
 
-		// post list
+app.controller('MainCtrl', ['$scope', 'posts',
+	function($scope, posts) {
+
+		// Bind posts to service
+		$scope.posts = posts.posts;
+
+		// Post list
 		$scope.posts = [
 		{title: 'post 1', upvotes: 5},
 		{title: 'post 2', upvotes: 2},
