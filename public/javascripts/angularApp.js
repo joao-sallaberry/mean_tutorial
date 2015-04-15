@@ -1,5 +1,22 @@
-var app = angular.module('meanApp', []);
+var app = angular.module('meanApp', ['ui.router']);
 
+// Setting routes
+app.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+
+  $stateProvider
+    .state('home', {
+      url: '/home',
+      templateUrl: '/home.html',
+      controller: 'MainCtrl'
+    });
+
+  $urlRouterProvider.otherwise('home');
+}]);
+
+// Create posts service
 app.factory('posts', [function(){
 	var o = {
 		posts: []
@@ -7,6 +24,7 @@ app.factory('posts', [function(){
 	return o;
 }]);
 
+// Main Controller
 app.controller('MainCtrl', ['$scope', 'posts',
 	function($scope, posts) {
 
